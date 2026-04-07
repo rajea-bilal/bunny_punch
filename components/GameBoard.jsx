@@ -33,6 +33,7 @@ const GameBoard = ({
   //cMediaPipe to:
   // look at the webcam frame
   // check if it can see a hand print the hand points in the console
+  let indexFingerTip;
   const detectHand = () => {
     const video = videoRef.current;
     const handLandmarker = handLandmarkerRef.current;
@@ -40,9 +41,10 @@ const GameBoard = ({
     if (!video || !handLandmarker) return;
 
     const results = handLandmarker.detectForVideo(video, performance.now());
-
+    indexFingerTip = results.landmarks[0][8];
     console.log("results:", results);
     console.log("landmarks:", results.landmarks);
+    console.log("indexFingerTip:", indexFingerTip);
   };
 
   useEffect(() => {
@@ -64,15 +66,21 @@ const GameBoard = ({
     setup();
   }, []);
 
-  const handleHandPosition = (e) => {
-    const x = e.clientX;
-    const y = e.clientY;
+  const handleHandPosition = () => {
+    // const x = e.clientX;
+    // const y = e.clientY;
+    //multiply indexFingerTip.x by to turn it into a real horizontal pixel value
+    const x = indexFingerTip?.x;
+    const y = indexFingerTip?.y;
 
-    updateHandPosition(x, y);
+    const pixelX = window.innerWidth * x;
+    const pixelY = window.innerHeight * y;
+
+    updateHandPosition(pixelX, pixelY);
   };
   return (
     <main
-      onMouseMove={(e) => handleHandPosition(e)}
+      onMouseMove={() => handleHandPosition()}
       className=" min-h-screen font-helvetica bg-black/90 text-orange-50"
     >
       <div className=" relative flex flex-col gap-6 max-w-3xl px-10 py-10">
