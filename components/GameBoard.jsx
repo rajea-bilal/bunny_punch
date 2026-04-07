@@ -30,6 +30,21 @@ const GameBoard = ({
     console.log("hand landmarker ready");
   };
 
+  //cMediaPipe to:
+  // look at the webcam frame
+  // check if it can see a hand print the hand points in the console
+  const detectHand = () => {
+    const video = videoRef.current;
+    const handLandmarker = handLandmarkerRef.current;
+
+    if (!video || !handLandmarker) return;
+
+    const results = handLandmarker.detectForVideo(video, performance.now());
+
+    console.log("results:", results);
+    console.log("landmarks:", results.landmarks);
+  };
+
   useEffect(() => {
     const setup = async () => {
       // getUserMedia() is a method, asks the browser for access to the user’s camera or microphone.
@@ -43,6 +58,7 @@ const GameBoard = ({
       videoRef.current.srcObject = stream;
 
       await createHandLandmarker();
+      detectHand();
     };
 
     setup();
