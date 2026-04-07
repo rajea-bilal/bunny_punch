@@ -4,13 +4,15 @@ const HandCursor = ({ handPosition }) => {
   console.log("im being logged from handCursor component", handPosition);
   return (
     <div
-      className="fixed w-[2rem] h-[2rem] bg-green-300 pointer-events-none"
+      className="fixed w-[8rem] h-[8rem] pointer-events-none"
       style={{
         left: `${handPosition?.x}px`,
         top: `${handPosition?.y}px`,
         transform: "translate(-50%, -50%)",
       }}
-    ></div>
+    >
+      <img src={"./images/punch.png"} />
+    </div>
   );
 };
 

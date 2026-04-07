@@ -11,6 +11,9 @@ const GamePage = () => {
     setHandPosition,
     setScore,
     updateHandPosition,
+    bunnyPosition,
+    setBunnyPosition,
+    generateRandomBunnyPosition,
   } = useGame();
 
   return (
@@ -22,6 +25,9 @@ const GamePage = () => {
           handPosition={handPosition}
           setHandPosition={setHandPosition}
           updateHandPosition={updateHandPosition}
+          bunnyPosition={bunnyPosition}
+          setBunnyPosition={setBunnyPosition}
+          generateRandomBunnyPosition={generateRandomBunnyPosition}
         />
       ) : (
         <StartScreen
