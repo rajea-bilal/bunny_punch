@@ -97,7 +97,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         {/* Supporting Text */}
         <p
           style={{ fontFamily: "Figtree, sans-serif" }}
-          className="mx-auto font-medium  mb-10 max-w-xl text-2xl leading-relaxed tracking-tight text-[#4D4841]"
+          className="mx-auto font-medium  mb-10 max-w-xl text-xl sm:text-2xl leading-relaxed tracking-tight text-[#4D4841]"
         >
           A webcam-powered pixel game where your real hand becomes the
           controller, using Google MediaPipe Hand Landmarker to track your
