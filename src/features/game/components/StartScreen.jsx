@@ -58,9 +58,9 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
       />
 
       {/* Main Content */}
-      <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center px-6 py-12 text-center">
+      <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center px-6 py-8 text-center">
         {/* Label */}
-        <div className="mb-10 inline-flex items-center gap-3 border-2 border-[#9E8C7A] bg-[#F4F0E6] px-4 py-1.5 shadow-[2px_2px_0_0_#9E8C7A]">
+        <div className="mb-2 inline-flex items-center gap-3 border-2 border-[#9E8C7A] bg-[#F4F0E6] px-4 py-1.5 shadow-[2px_2px_0_0_#9E8C7A]">
           <ScanLine className="h-4 w-4 text-[#D49A9A]" strokeWidth={1.5} />
           <span className="text-xs font-medium tracking-widest text-[#7A7469]">
             HAND-TRACKED ARCADE GAME
@@ -68,7 +68,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         </div>
 
         {/* Bunny Card */}
-        <div className="w-[250px] h-[250px]">
+        <div className="w-[200px] h-[200px]">
           <img src={"/images/bunny.png"} className="text-green-500" />
         </div>
 
@@ -89,7 +89,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
           style={{
             fontfamily: "Figtree, sans-serif",
           }}
-          className="mb-8 text-3xl font-bold tracking-relaxed text-[#769A6F] sm:text-4xl"
+          className="mb-6 text-3xl font-bold tracking-relaxed text-[#769A6F] sm:text-4xl"
         >
           Punch bunnies. Score fast.
         </h2>
@@ -97,7 +97,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         {/* Supporting Text */}
         <p
           style={{ fontFamily: "Figtree, sans-serif" }}
-          className="mx-auto mb-12 max-w-2xl text-2xl leading-relaxed tracking-tight text-[#4D4841]"
+          className="mx-auto font-medium  mb-10 max-w-xl text-2xl leading-relaxed tracking-tight text-[#4D4841]"
         >
           A webcam-powered pixel game where your real hand becomes the
           controller, using Google MediaPipe Hand Landmarker to track your
@@ -107,8 +107,9 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         {/* Buttons */}
         <div className="flex w-full max-w-md flex-col justify-center gap-5 sm:flex-row">
           <button
+            style={{ fontFamily: "Figtree, sans-serif" }}
             onClick={() => handleGameStart()}
-            className="group relative flex w-full cursor-pointer items-center justify-center gap-3  bg-[#BA686F]/80 px-6 py-4 text-lg font-medium text-[#F5F0E6] transition-colors hover:bg-[#C28A8A] active:translate-x-1 active:translate-y-1 active:shadow-[0_0_0_0_#4C4841]"
+            className="group relative flex w-full cursor-pointer items-center justify-center gap-3  bg-[#BA686F]/80 px-6 py-4 text-xl font-bold text-[#F5F0E6] transition-colors hover:bg-[#C28A8A] active:translate-x-1 active:translate-y-1 active:shadow-[0_0_0_0_#4C4841]"
           >
             <Gamepad2 className="h-6 w-6" strokeWidth={1.5} />
             Start Game
@@ -116,7 +117,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
 
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-3 border-2 border-[#4C4841] bg-transparent px-6 py-4 text-lg font-medium text-[#4C4841] transition-colors hover:bg-[#E6DFCE] active:translate-x-1 active:translate-y-1 active:shadow-[0_0_0_0_#4C4841]"
+            className="flex w-full items-center justify-center gap-3 border-2 border-[#4C4841] bg-transparent px-6 py-4 text-lg font-bold text-[#4C4841] transition-colors hover:bg-[#E6DFCE] active:translate-x-1 active:translate-y-1 active:shadow-[0_0_0_0_#4C4841]"
           >
             <BookOpen className="h-5 w-5 text-[#9E8C7A]" strokeWidth={1.5} />
             How to Play
