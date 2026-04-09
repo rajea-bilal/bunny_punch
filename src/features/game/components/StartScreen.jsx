@@ -60,7 +60,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
       {/* Main Content */}
       <div className="relative z-20 mx-auto flex max-w-3xl flex-col items-center px-6 py-8 text-center">
         {/* Label */}
-        <div className="mb-2 inline-flex items-center gap-3 border-2 border-[#9E8C7A] bg-[#F4F0E6] px-4 py-1.5 shadow-[2px_2px_0_0_#9E8C7A]">
+        <div className="mb-8 inline-flex items-center gap-3 border-2 border-[#9E8C7A] bg-[#F4F0E6] px-4 py-1.5 shadow-[2px_2px_0_0_#9E8C7A]">
           <ScanLine className="h-4 w-4 text-[#D49A9A]" strokeWidth={1.5} />
           <span className="text-xs font-medium tracking-widest text-[#7A7469]">
             HAND-TRACKED ARCADE GAME
@@ -68,8 +68,8 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         </div>
 
         {/* Bunny Card */}
-        <div className="w-[200px] h-[200px]">
-          <img src={"/images/bunny.png"} className="text-green-500" />
+        <div className="w-[200px] h-[200px]  bg-[#C9A661] rounded-full">
+          <img src={"/images/bunny.png"} className="w-full h-full p-6" />
         </div>
 
         {/* Title */}
