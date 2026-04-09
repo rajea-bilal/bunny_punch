@@ -1,4 +1,6 @@
+import { Howl } from "howler";
 import { useRef, useEffect } from "react";
+// tools we need for hand tracking
 import { FilesetResolver, HandLandmarker } from "@mediapipe/tasks-vision";
 import HandCursor from "./HandCursor";
 import Bunny from "./Bunny";
@@ -8,24 +10,39 @@ const GameBoard = ({
   setScore,
   handPosition,
   // setHandPosition,
-  updateHandPosition,
+  // updateHandPosition,
   bunnyPosition,
   generateRandomBunnyPosition,
+  bunnyHit,
+  setBunnyHit,
 }) => {
-  const videoRef = useRef(null);
-  const handLandmarkerRef = useRef(null);
+  const videoRef = useRef(null); // video element ref
+  const handLandmarkerRef = useRef(null); // mediaPipe hand landmarker obj storage
+  const cursorRef = useRef(null); // hand cursor DOM element
+  const bunnyPositionRef = useRef(null); // storing latest bunny position data
+  const soundRef = useRef(null);
+  const canHitRef = useRef(true);
+
+  const onBunnyHit = () => {
+    console.log("the onBunnyHit function ran");
+    const rate = 0.9 + Math.random() * 0.2;
+    soundRef.current?.rate(rate);
+    soundRef.current?.play();
+  };
 
   const createHandLandmarker = async () => {
+    // loads the MP vision files, needed before the hand model can work
     const vision = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
     );
 
+    // creates hand landmarker using loaded vision files
     const handLandmarker = await HandLandmarker.createFromOptions(vision, {
       baseOptions: {
-        modelAssetPath: "/models/hand_landmarker.task",
+        modelAssetPath: "/models/hand_landmarker.task", // hand model file is in public folder
       },
-      runningMode: "VIDEO",
-      numHands: 1,
+      runningMode: "VIDEO", // providing video stream
+      numHands: 1, // track 1 hand
     });
 
     handLandmarkerRef.current = handLandmarker;
@@ -33,31 +50,67 @@ const GameBoard = ({
     console.log("hand landmarker ready");
   };
 
-  //MediaPipe to:
+  useEffect(() => {
+    soundRef.current = new Howl({
+      src: ["/sounds/bonk.mp3"],
+      volume: 0.8,
+    });
+  }, []);
+
+  // MediaPipe to:
   // look at the webcam frame
   // check if it can see a hand print the hand points in the console
   const detectHand = () => {
     const video = videoRef.current;
     const handLandmarker = handLandmarkerRef.current;
 
-    if (!video || !handLandmarker) return;
-
+    // look at current video stream, process it, give detection results
     const results = handLandmarker.detectForVideo(video, performance.now());
-    console.log("results", results);
 
-    // Make sure we actually see a hand before grabbing the finger!
+    // Make sure we actually see a hand before grabbing the finger
     if (results.landmarks && results.landmarks.length > 0) {
-      // 1. Declare it as a const right here inside the function
+      // fingertip coordinates
       const indexFingerTip = results.landmarks[0][8];
-      // 2. Do the math
-      const pixelX = window.innerWidth * indexFingerTip.x;
+
+      // convert the MP x/y values (0-1) into real pixel values on the screen
+      // `1 - indexFingerTip.x` flips the x-axis because the webcam view is mirrored
+      const pixelX = window.innerWidth * (1 - indexFingerTip.x);
       const pixelY = window.innerHeight * indexFingerTip.y;
 
-      // 3. Update the global state so normal React takes over!
-      updateHandPosition(pixelX, pixelY);
+      if (cursorRef.current) {
+        cursorRef.current.style.left = `${pixelX}px`;
+        cursorRef.current.style.top = `${pixelY}px`;
+      }
+
+      const bunny = bunnyPositionRef.current;
+
+      if (!bunny) return;
+      // Calculate the distance between them
+      // Math.abs() ensures the number is always positive, even if calculating negative distance
+      const xDistance = Math.abs(pixelX - bunny.randomX);
+      const yDistance = Math.abs(pixelY - bunny.randomY);
+
+      // Are they close enough to count as a 'punch'?
+      // (You can change '80' to make the hitbox bigger or smaller!)
+      if (xDistance < 80 && yDistance < 80 && canHitRef.current === true) {
+        console.log("HIT THE BUNNY! 💥");
+        canHitRef.current = false;
+        onBunnyHit();
+        setBunnyHit(true);
+        // Step A: Increase the score
+        setScore((prev) => prev + 1);
+        // Step B: Call the randomizer function to respawn the bunny instantly
+        generateRandomBunnyPosition();
+
+        // change canHit from false to true after 2s so score doesn't jump
+        setTimeout(() => {
+          canHitRef.current = true;
+          setBunnyHit(false);
+        }, 200);
+      }
     }
 
-    // 4. Loop it! (Fixing the "run once" issue)
+    // looping logic to ensure detectHand runs continuously
     requestAnimationFrame(detectHand);
   };
 
@@ -74,53 +127,58 @@ const GameBoard = ({
       videoRef.current.srcObject = stream;
 
       await createHandLandmarker();
-      requestAnimationFrame(detectHand);
+
+      requestAnimationFrame(detectHand); // starts the detectHand function when component first mounts
     };
 
     setup();
     generateRandomBunnyPosition();
   }, []);
 
+  // store the latest bunny position value from state inside
   useEffect(() => {
-    // If the game just started and there is no hand or bunny yet, wait.
-    if (!handPosition || !bunnyPosition) return;
+    bunnyPositionRef.current = bunnyPosition;
+  }, [bunnyPosition]);
 
-    // 2. Calculate the distance between them
-    // Math.abs() ensures the number is always positive, even if calculating negative distance
-    const xDistance = Math.abs(handPosition.x - bunnyPosition.randomX);
-    const yDistance = Math.abs(handPosition.y - bunnyPosition.randomY);
+  // useEffect(() => {
+  //   // If the game just started and there is no hand or bunny yet, wait.
+  //   if (!handPosition || !bunnyPosition) return;
 
-    // 3. Are they close enough to count as a "punch"?
-    // (You can change '80' to make the hitbox bigger or smaller!)
-    if (xDistance < 80 && yDistance < 80) {
-      console.log("💥 HIT THE BUNNY! 💥");
+  //   // Calculate the distance between them
+  //   // Math.abs() ensures the number is always positive, even if calculating negative distance
+  //   const xDistance = Math.abs(handPosition.x - bunnyPosition.randomX);
+  //   const yDistance = Math.abs(handPosition.y - bunnyPosition.randomY);
 
-      // Step A: Increase the score! (You'll need to pass setScore down from GamePage)
-      // Example: setScore(prevScore => prevScore + 1);
-      setScore((prev) => prev + 1);
-      // Step B: Call your randomizer function to respawn the bunny instantly!
-      generateRandomBunnyPosition();
-    }
-  }, [handPosition, bunnyPosition]); // <--- This tells React: "Run this math every single time the hand or bunny moves!"
+  //   // Are they close enough to count as a 'punch'?
+  //   // (You can change '80' to make the hitbox bigger or smaller!)
+  //   if (xDistance < 80 && yDistance < 80) {
+  //     console.log("HIT THE BUNNY! 💥");
+  //     onBunnyHit();
+  //     // Step A: Increase the score
+  //     setScore((prev) => prev + 1);
+  //     // Step B: Call the randomizer function to respawn the bunny instantly
+  //     generateRandomBunnyPosition();
+  //   }
+  // }, [handPosition, bunnyPosition]); // Run this math every single time the hand or bunny moves!
 
   return (
-    <main className=" min-h-screen font-helvetica bg-black/90 text-orange-50">
-      <div className=" relative flex flex-col gap-6 max-w-3xl px-10 py-10">
-        <div className="flex justify-between ">
-          <h1 className="text-5xl">GameBoard</h1>
-
-          <h1 className="text-5xl">Score: {score}</h1>
+    <main className=" min-h-screen font-helvetica bg-orange-50 text-orange-50 flex justify-center">
+      <div className=" relative flex flex-col gap-6 max-w-6xl w-full px-10 py-10 ">
+        <div className="flex justify-end mb-10">
+          <h1 className="text-5xl text-brand-primary">Score: {score}</h1>
         </div>
 
-        <HandCursor handPosition={handPosition} />
-        <Bunny bunnyPosition={bunnyPosition} />
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="w-[400px]"
-        />
+        <HandCursor cursorRef={cursorRef} handPosition={handPosition} />
+        <Bunny bunnyHit={bunnyHit} bunnyPosition={bunnyPosition} />
+        <div className="w-[300px] h-[300px]  p-[5px] bg-[conic-gradient(from_45deg,_rgb(255,179,209),_rgb(156,50,131),_rgb(255,199,96))]">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full h-full  object-cover bg-black "
+          />
+        </div>
       </div>
     </main>
   );

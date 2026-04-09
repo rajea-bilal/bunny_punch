@@ -1,9 +1,8 @@
-import React from "react";
-
-const HandCursor = ({ handPosition }) => {
-  console.log("im being logged from handCursor component", handPosition);
+// custom punch cursor
+const HandCursor = ({ handPosition, cursorRef }) => {
   return (
     <div
+      ref={cursorRef}
       className="fixed w-[8rem] h-[8rem] pointer-events-none"
       style={{
         left: `${handPosition?.x}px`,
@@ -17,5 +16,3 @@ const HandCursor = ({ handPosition }) => {
 };
 
 export default HandCursor;
-
-// top-[${x}] left-[${y}]

@@ -8,6 +8,7 @@ export const GameProvider = ({ children }) => {
   const [score, setScore] = useState(null);
   const [handPosition, setHandPosition] = useState(null);
   const [bunnyPosition, setBunnyPosition] = useState(null);
+  const [bunnyHit, setBunnyHit] = useState(false);
   return (
     <GameContext.Provider
       value={{
@@ -19,6 +20,8 @@ export const GameProvider = ({ children }) => {
         setHandPosition,
         bunnyPosition,
         setBunnyPosition,
+        bunnyHit,
+        setBunnyHit,
       }}
     >
       {children}

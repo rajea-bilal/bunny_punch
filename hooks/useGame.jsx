@@ -12,10 +12,11 @@ const useGame = () => {
     setHandPosition,
     bunnyPosition,
     setBunnyPosition,
+    bunnyHit,
+    setBunnyHit,
   } = context;
 
   const updateHandPosition = (x, y) => {
-    console.log(x, y);
     setHandPosition({ x, y });
   };
 
@@ -23,9 +24,6 @@ const useGame = () => {
     const randomX = Math.floor(Math.random() * window.innerWidth);
     const randomY = Math.floor(Math.random() * window.innerHeight);
 
-    console.log("random bunny X", randomX);
-
-    console.log("random bunny Y", randomY);
     setBunnyPosition({ randomX, randomY });
   };
 
@@ -40,6 +38,8 @@ const useGame = () => {
     bunnyPosition,
     setBunnyPosition,
     generateRandomBunnyPosition,
+    bunnyHit,
+    setBunnyHit,
   };
 };
 

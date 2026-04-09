@@ -1,7 +1,8 @@
 import React from "react";
 
-const Bunny = ({ bunnyPosition }) => {
+const Bunny = ({ bunnyPosition, bunnyHit }) => {
   console.log("bunnyPosition from inside bunny", bunnyPosition);
+  console.log("bunnyHit state", bunnyHit);
   return (
     <div
       style={{
@@ -9,9 +10,12 @@ const Bunny = ({ bunnyPosition }) => {
         top: `${bunnyPosition?.randomY}px`,
         transform: "translate(-50%, -50%)",
       }}
-      className="w-[6rem] h-[6rem] absolute"
+      className="w-[7rem] h-[7rem] absolute bg-pink-300 rounded-full p-2"
     >
-      <img className="w-full h-full" src={"./images/bunny.jpeg"} />
+      <img
+        className="w-full h-full"
+        src={bunnyHit ? "/images/knocked_off.png" : "/images/bunny.png"}
+      />
     </div>
   );
 };
