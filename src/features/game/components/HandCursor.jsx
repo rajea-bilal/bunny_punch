@@ -3,7 +3,7 @@ const HandCursor = ({ handPosition, cursorRef }) => {
   return (
     <div
       ref={cursorRef}
-      className="fixed w-[8rem] h-[8rem] pointer-events-none"
+      className="fixed w-[8rem] h-[8rem] pointer-events-none z-40"
       style={{
         left: `${handPosition?.x}px`,
         top: `${handPosition?.y}px`,

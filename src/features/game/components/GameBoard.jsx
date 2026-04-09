@@ -142,7 +142,7 @@ const GameBoard = ({
   }, [bunnyPosition]);
 
   return (
-    <main className=" min-h-screen font-helvetica bg-orange-50 text-orange-50 flex justify-center">
+    <main className="min-h-screen font-helvetica bg-orange-50 text-[#4D4841] relative overflow-hidden">
       {/* Background Grid Texture */}
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-[0.6]"
@@ -160,24 +160,53 @@ const GameBoard = ({
           backgroundSize: "120px 120px",
         }}
       />
+
       <div
         ref={boardRef}
-        className="relative flex flex-col gap-6 max-w-6xl w-full px-10 py-10 "
+        className="relative z-10 min-h-screen max-w-7xl mx-auto px-8 py-8 flex flex-col"
       >
-        <div className="flex justify-end mb-10">
-          <h1 className="text-5xl text-[#4D4841]">Score: {score}</h1>
+        {/* Top Bar */}
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-1">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center shrink-0">
+              <img
+                src="/images/bunny.png"
+                alt="Bunny logo"
+                className="w-16 h-16 object-contain"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <p className="mt-2 text-2xl text-[#7A6E62]">
+                Move your hand to control the cursor and hit the bunny
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#FFF7ED] border border-[#E7D7C3] shadow-md rounded-full px-6 py-3">
+            <p className="text-sm uppercase tracking-[0.2em] text-[#9A8C7C]">
+              Score
+            </p>
+            <h2 className="text-4xl font-semibold leading-none">{score}</h2>
+          </div>
         </div>
 
-        <HandCursor cursorRef={cursorRef} handPosition={handPosition} />
-        <Bunny bunnyHit={bunnyHit} bunnyPosition={bunnyPosition} />
-        <div className="w-[300px] h-[300px]  p-[5px] bg-[conic-gradient(from_45deg,_rgb(255,179,209),_rgb(156,50,131),_rgb(255,199,96))]">
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-full  object-cover bg-black "
-          />
+        {/* Game Area */}
+        <div className="flex-1 flex items-center justify-center">
+          <HandCursor cursorRef={cursorRef} handPosition={handPosition} />
+          <Bunny bunnyHit={bunnyHit} bunnyPosition={bunnyPosition} />
+
+          <div className="bg-[#F7F1E8]/80 backdrop-blur-sm border border-[#D8CBB8] rounded-[32px] p-6 shadow-md">
+            <div className="relative w-[700px] h-[500px] p-[5px] rounded-[28px] shadow-md bg-[conic-gradient(from_45deg,_rgb(255,179,209),_rgb(156,50,131),_rgb(255,199,96))]">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover bg-black rounded-[24px]"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </main>
