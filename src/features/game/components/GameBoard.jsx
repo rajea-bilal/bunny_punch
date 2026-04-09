@@ -107,7 +107,7 @@ const GameBoard = ({
         setTimeout(() => {
           canHitRef.current = true;
           setBunnyHit(false);
-        }, 300);
+        }, 100);
       }
     }
 
