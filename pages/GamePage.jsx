@@ -10,7 +10,7 @@ const GamePage = () => {
     handPosition,
     setHandPosition,
     setScore,
-    updateHandPosition,
+
     bunnyPosition,
     setBunnyPosition,
     generateRandomBunnyPosition,
@@ -26,7 +26,6 @@ const GamePage = () => {
           setScore={setScore}
           handPosition={handPosition}
           setHandPosition={setHandPosition}
-          updateHandPosition={updateHandPosition}
           bunnyPosition={bunnyPosition}
           bunnyHit={bunnyHit}
           setBunnyHit={setBunnyHit}

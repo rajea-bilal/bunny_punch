@@ -16,13 +16,18 @@ const useGame = () => {
     setBunnyHit,
   } = context;
 
-  const updateHandPosition = (x, y) => {
-    setHandPosition({ x, y });
-  };
+  const generateRandomBunnyPosition = (boardRef) => {
+    const board = boardRef.current;
+    if (!board) return;
 
-  const generateRandomBunnyPosition = () => {
-    const randomX = Math.floor(Math.random() * window.innerWidth);
-    const randomY = Math.floor(Math.random() * window.innerHeight);
+    const bunnyWidth = 112;
+    const bunnyHeight = 112;
+
+    const boardWidth = board.clientWidth;
+    const boardHeight = board.clientHeight;
+
+    const randomX = Math.floor(Math.random() * (boardWidth - bunnyWidth));
+    const randomY = Math.floor(Math.random() * (boardHeight - bunnyHeight));
 
     setBunnyPosition({ randomX, randomY });
   };
@@ -33,7 +38,7 @@ const useGame = () => {
     score,
     handPosition,
     setHandPosition,
-    updateHandPosition,
+
     setScore,
     bunnyPosition,
     setBunnyPosition,

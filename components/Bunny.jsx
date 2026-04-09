@@ -1,14 +1,14 @@
 import React from "react";
 
 const Bunny = ({ bunnyPosition, bunnyHit }) => {
-  console.log("bunnyPosition from inside bunny", bunnyPosition);
-  console.log("bunnyHit state", bunnyHit);
+  // console.log("bunnyPosition from inside bunny", bunnyPosition);
+  // console.log("bunnyHit state", bunnyHit);
   return (
     <div
       style={{
         left: `${bunnyPosition?.randomX}px`,
         top: `${bunnyPosition?.randomY}px`,
-        transform: "translate(-50%, -50%)",
+        transform: `translate(-50%, -50%) scale(${bunnyHit ? 1.2 : 1})`,
       }}
       className="w-[7rem] h-[7rem] absolute bg-pink-300 rounded-full p-2"
     >

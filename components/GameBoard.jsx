@@ -16,6 +16,7 @@ const GameBoard = ({
   bunnyHit,
   setBunnyHit,
 }) => {
+  const boardRef = useRef(null);
   const videoRef = useRef(null); // video element ref
   const handLandmarkerRef = useRef(null); // mediaPipe hand landmarker obj storage
   const cursorRef = useRef(null); // hand cursor DOM element
@@ -100,13 +101,13 @@ const GameBoard = ({
         // Step A: Increase the score
         setScore((prev) => prev + 1);
         // Step B: Call the randomizer function to respawn the bunny instantly
-        generateRandomBunnyPosition();
+        generateRandomBunnyPosition(boardRef);
 
         // change canHit from false to true after 2s so score doesn't jump
         setTimeout(() => {
           canHitRef.current = true;
           setBunnyHit(false);
-        }, 200);
+        }, 300);
       }
     }
 
@@ -132,7 +133,7 @@ const GameBoard = ({
     };
 
     setup();
-    generateRandomBunnyPosition();
+    generateRandomBunnyPosition(boardRef);
   }, []);
 
   // store the latest bunny position value from state inside
@@ -140,32 +141,31 @@ const GameBoard = ({
     bunnyPositionRef.current = bunnyPosition;
   }, [bunnyPosition]);
 
-  // useEffect(() => {
-  //   // If the game just started and there is no hand or bunny yet, wait.
-  //   if (!handPosition || !bunnyPosition) return;
-
-  //   // Calculate the distance between them
-  //   // Math.abs() ensures the number is always positive, even if calculating negative distance
-  //   const xDistance = Math.abs(handPosition.x - bunnyPosition.randomX);
-  //   const yDistance = Math.abs(handPosition.y - bunnyPosition.randomY);
-
-  //   // Are they close enough to count as a 'punch'?
-  //   // (You can change '80' to make the hitbox bigger or smaller!)
-  //   if (xDistance < 80 && yDistance < 80) {
-  //     console.log("HIT THE BUNNY! 💥");
-  //     onBunnyHit();
-  //     // Step A: Increase the score
-  //     setScore((prev) => prev + 1);
-  //     // Step B: Call the randomizer function to respawn the bunny instantly
-  //     generateRandomBunnyPosition();
-  //   }
-  // }, [handPosition, bunnyPosition]); // Run this math every single time the hand or bunny moves!
-
   return (
     <main className=" min-h-screen font-helvetica bg-orange-50 text-orange-50 flex justify-center">
-      <div className=" relative flex flex-col gap-6 max-w-6xl w-full px-10 py-10 ">
+      {/* Background Grid Texture */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.6]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#E6DFCE 1px, transparent 1px), linear-gradient(90deg, #E6DFCE 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.3]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#9E8C7A 1px, transparent 1px), linear-gradient(90deg, #9E8C7A 1px, transparent 1px)",
+          backgroundSize: "120px 120px",
+        }}
+      />
+      <div
+        ref={boardRef}
+        className="relative flex flex-col gap-6 max-w-6xl w-full px-10 py-10 "
+      >
         <div className="flex justify-end mb-10">
-          <h1 className="text-5xl text-brand-primary">Score: {score}</h1>
+          <h1 className="text-5xl text-[#4D4841]">Score: {score}</h1>
         </div>
 
         <HandCursor cursorRef={cursorRef} handPosition={handPosition} />
