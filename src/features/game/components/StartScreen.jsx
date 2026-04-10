@@ -41,7 +41,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F4F0E6] font-['Space_Mono',monospace] text-[#4C4841] selection:bg-[#D49A9A] selection:text-[#F4F0E6]">
       {/* Background Grid Texture */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.6]"
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.5]"
         style={{
           backgroundImage:
             "linear-gradient(#E6DFCE 1px, transparent 1px), linear-gradient(90deg, #E6DFCE 1px, transparent 1px)",
@@ -49,7 +49,7 @@ const StartScreen = ({ setGameStarted, gameStarted }) => {
         }}
       />
       <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.3]"
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.1]"
         style={{
           backgroundImage:
             "linear-gradient(#9E8C7A 1px, transparent 1px), linear-gradient(90deg, #9E8C7A 1px, transparent 1px)",
