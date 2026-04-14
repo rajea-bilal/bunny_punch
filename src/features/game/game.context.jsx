@@ -5,7 +5,7 @@ export const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
   const [gameStarted, setGameStarted] = useState(false);
-  const [score, setScore] = useState(null);
+  const [score, setScore] = useState(0);
   const [handPosition, setHandPosition] = useState(null);
   const [bunnyPosition, setBunnyPosition] = useState(null);
   const [bunnyHit, setBunnyHit] = useState(false);

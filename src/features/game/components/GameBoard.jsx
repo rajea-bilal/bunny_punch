@@ -23,6 +23,8 @@ const GameBoard = ({
   const bunnyPositionRef = useRef(null); // storing latest bunny position data
   const soundRef = useRef(null);
   const canHitRef = useRef(true);
+  const rafIdRef = useRef(null); // keeps latest animation frame id
+  const streamRef = useRef(null); // keeps webcam stream so cleanup can stop it
 
   const onBunnyHit = () => {
     console.log("the onBunnyHit function ran");
@@ -73,10 +75,17 @@ const GameBoard = ({
       // fingertip coordinates
       const indexFingerTip = results.landmarks[0][8];
 
+      
+      const board = boardRef.current;
+      if (!board) return;
+
+      // object describing where that board sits on screen in pixels.
+     const rect = board.getBoundingClientRect();
+
       // convert the MP x/y values (0-1) into real pixel values on the screen
       // `1 - indexFingerTip.x` flips the x-axis because the webcam view is mirrored
-      const pixelX = window.innerWidth * (1 - indexFingerTip.x);
-      const pixelY = window.innerHeight * indexFingerTip.y;
+      const pixelX = rect.left + rect.width * (1 - indexFingerTip.x);
+      const pixelY = rect.top + rect.height * indexFingerTip.y;
 
       if (cursorRef.current) {
         cursorRef.current.style.left = `${pixelX}px`;
@@ -112,7 +121,7 @@ const GameBoard = ({
     }
 
     // looping logic to ensure detectHand runs continuously
-    requestAnimationFrame(detectHand);
+    rafIdRef.current = requestAnimationFrame(detectHand);
   };
 
   useEffect(() => {
@@ -123,17 +132,32 @@ const GameBoard = ({
         video: true,
         audio: false,
       });
+      streamRef.current = stream;
 
       // take this live camera stream and plug it into the video element so it can show it on the page
       videoRef.current.srcObject = stream;
 
       await createHandLandmarker();
 
-      requestAnimationFrame(detectHand); // starts the detectHand function when component first mounts
+      // start the hand-detect loop and save the id so we can cancel it later
+      rafIdRef.current = requestAnimationFrame(detectHand);
     };
 
     setup();
     generateRandomBunnyPosition(boardRef);
+
+    return () => {
+      // stop the animation loop when this screen goes away
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+
+      // if camera stream exists, stop every track to fully release the webcam
+      if (streamRef.current) {
+        const tracks = streamRef.current.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+    };
   }, []);
 
   // store the latest bunny position value from state inside
